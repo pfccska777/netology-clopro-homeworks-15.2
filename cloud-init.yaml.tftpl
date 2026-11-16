@@ -1,0 +1,33 @@
+#cloud-config
+ssh_pwauth: false
+
+users:
+  - name: ubuntu
+    groups: sudo
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+
+write_files:
+  - path: /var/www/html/index.html
+    owner: root:root
+    permissions: "0644"
+    content: |
+      <!DOCTYPE html>
+      <html lang="ru">
+      <head>
+          <meta charset="UTF-8">
+          <title>Netology 15.2</title>
+      </head>
+      <body>
+          <h1>Netology 15.2 - LAMP Instance Group</h1>
+          <p>Yandex Cloud - Terraform - Network Load Balancer</p>
+
+          <h2>Изображение из Object Storage</h2>
+          <img src="${image_url}" alt="Netology image" width="500">
+      </body>
+      </html>
+
+runcmd:
+  - [systemctl, enable, --now, apache2]
